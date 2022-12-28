@@ -38,6 +38,20 @@
             }
         }
 
+        public int FirstFreePosition(int x)
+        {
+            for (int i = 0; i < Rows; i++)
+            {
+                var currentCell = Cells[x, i];
+                if (currentCell.PlayerType == PlayerType.Empty)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
         public void InitializeDummyData()
         {
             Cells[0, 0].PlayerType = PlayerType.Human;
@@ -52,7 +66,6 @@
             Cells[4, 0].PlayerType = PlayerType.Computer;
             Cells[5, 0].PlayerType = PlayerType.Computer;
             Cells[6, 0].PlayerType = PlayerType.Computer;
-
         }
     }
 }
