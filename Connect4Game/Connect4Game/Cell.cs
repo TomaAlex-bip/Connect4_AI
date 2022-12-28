@@ -8,6 +8,11 @@
         {
             PlayerType = PlayerType.Empty;
         }
+
+        public Cell(PlayerType playerType)
+        {
+            PlayerType = playerType;
+        }
     }
 
     public enum PlayerType

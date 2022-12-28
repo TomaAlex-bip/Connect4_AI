@@ -23,6 +23,21 @@
             };
         }
 
+        public Table(Table table)
+        {
+            Rows = table.Rows;
+            Columns = table.Columns;
+            Cells = new Cell[Columns, Rows];
+
+            for (int i = 0; i < Columns; i++)
+            {
+                for (int j = 0; j < Rows; j++)
+                {
+                    Cells[i, j] = new Cell(table.Cells[i, j].PlayerType);
+                }
+            }
+        }
+
         public void InitializeDummyData()
         {
             Cells[0, 0].PlayerType = PlayerType.Human;
