@@ -1,4 +1,7 @@
-﻿namespace Connect4Game
+﻿using System.Drawing;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
+
+namespace Connect4Game
 {
     public class Table
     {
@@ -50,6 +53,157 @@
             }
 
             return -1;
+        }
+
+        public int GetMaxPoints(PlayerType playerType, int col, int row)
+        {
+            int maxPoints = 0;
+
+            // Check the row that contains the newly placed piece
+            for (int i = col - 3; i <= col + 3; i++)
+            {
+                if (i >= 0 && i < Columns && Cells[i, row].PlayerType == playerType)
+                {
+                    int count = 1;
+                    for (int j = i + 1; j <= col + 3; j++)
+                    {
+                        if (j >= 0 && j < Columns && Cells[j, row].PlayerType == playerType)
+                        {
+                            count++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    for (int j = i - 1; j >= col - 3; j--)
+                    {
+                        if (j >= 0 && j < Columns && Cells[j, row].PlayerType == playerType)
+                        {
+                            count++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    if (count >= maxPoints)
+                    {
+                        maxPoints = count;
+                    }
+                }
+            }
+
+            // Check the column that contains the newly placed piece
+            for (int i = row - 3; i <= row + 3; i++)
+            {
+                if (i >= 0 && i < Rows && Cells[col, i].PlayerType == playerType)
+                {
+                    int count = 1;
+                    for (int j = i + 1; j <= row + 3; j++)
+                    {
+                        if (j >= 0 && j < Rows && Cells[col, j].PlayerType == playerType)
+                        {
+                            count++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    for (int j = i - 1; j >= row - 3; j--)
+                    {
+                        if (j >= 0 && j < Rows && Cells[col, j].PlayerType == playerType)
+                        {
+                            count++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    if (count >= maxPoints)
+                    {
+                        maxPoints = count;
+                    }
+                }
+            }
+
+            // Check the positive diagonal that contains the newly placed piece
+            for (int i = col - 3, j = row - 3; i <= col + 3; i++, j++)
+            {
+                if (i >= 0 && i < Columns && j >= 0 && j < Rows && Cells[i, j].PlayerType == playerType)
+                {
+                    int count = 1;
+                    for (int k = i + 1, l = j + 1; k <= col + 3; k++, l++)
+                    {
+                        if (k >= 0 && k < Columns && l >= 0 && l < Rows && Cells[k, l].PlayerType == playerType)
+                        {
+                            count++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    for (int k = i - 1, l = j - 1; k >= col - 3; k--, l--)
+                    {
+                        if (k >= 0 && k < Columns && l >= 0 && l < Rows && Cells[k, l].PlayerType == playerType)
+                        {
+                            count++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    if (count >= maxPoints)
+                    {
+                        maxPoints = count;
+                    }
+                }
+            }
+
+            // Check the negative diagonal that contains the newly placed piece
+            for (int i = col - 3, j = row - 3; i <= col + 3; i++, j++)
+            {
+                if (i >= 0 && i < Columns && j >= 0 && j < Rows && Cells[i, j].PlayerType == playerType)
+                {
+                    int count = 1;
+                    for (int k = i + 1, l = j - 1; k <= col + 3; k++, l--)
+                    {
+                        if (k >= 0 && k < Columns && l >= 0 && l < Rows && Cells[k, l].PlayerType == playerType)
+                        {
+                            count++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    for (int k = i - 1, l = j + 1; k >= col - 3; k--, l++)
+                    {
+                        if (k >= 0 && k < Columns && l >= 0 && l < Rows && Cells[k, l].PlayerType == playerType)
+                        {
+                            count++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    if (count >= maxPoints)
+                    {
+                        maxPoints = count;
+                    }
+                }
+            }
+
+            return maxPoints;
         }
 
         public void InitializeDummyData()

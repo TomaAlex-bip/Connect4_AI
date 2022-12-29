@@ -132,15 +132,31 @@ namespace Connect4Game
             _table = nextTable;
             pictureBoxTable.Refresh();
 
-            CheckWinningConditions();
+            CheckWinningConditions(affectedColumn, affectedRow);
 
             _currentPlayer = PlayerType.Human;
             EnableAddTokenButtons();
         }
 
-        private void CheckWinningConditions()
+        private bool CheckWinningConditions(int col, int row)
         {
-            return;
+            var humanPoints = _table.GetMaxPoints(PlayerType.Human, col, row);
+            var computerPoints = _table.GetMaxPoints(PlayerType.Computer, col, row);
+
+            if (computerPoints >= 4)
+            {
+                MessageBox.Show("A castigat inteligenta!");
+                EnableAddTokenButtons(false);
+                return true;
+            }
+            else if (humanPoints >= 4)
+            {
+                MessageBox.Show("A castigat umanitatea!");
+                EnableAddTokenButtons(false);
+                return true;
+            }
+
+            return false;
         }
 
         private void PlayerMove(int x)
@@ -158,6 +174,11 @@ namespace Connect4Game
 
             AnimateTransition(oldTable, _table, x, y);
             pictureBoxTable.Refresh();
+
+            if(CheckWinningConditions(x, y))
+            {
+                return;
+            }
 
             _currentPlayer = PlayerType.Computer;
             EnableAddTokenButtons(false);
