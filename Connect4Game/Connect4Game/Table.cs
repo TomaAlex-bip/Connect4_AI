@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
+﻿using System;
 
 namespace Connect4Game
 {
@@ -41,7 +40,22 @@ namespace Connect4Game
             }
         }
 
-        public int FirstFreePosition(int x)
+		public Table MakeMove(int x, out int y, PlayerType player)
+		{
+			y = FirstFreePosition(x);
+			if (y == -1)
+			{
+				return null;
+			}
+
+			Table newTable = new Table(this);
+
+			newTable.Cells[x, y].PlayerType = player;
+			return newTable;
+		}
+
+
+		private int FirstFreePosition(int x)
         {
             for (int i = 0; i < Rows; i++)
             {
@@ -55,6 +69,7 @@ namespace Connect4Game
             return -1;
         }
 
+        // TODO: revisit the validation algorithm
         public int GetMaxPoints(PlayerType playerType, int col, int row)
         {
             int maxPoints = 0;

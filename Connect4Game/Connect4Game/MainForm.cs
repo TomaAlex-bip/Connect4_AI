@@ -17,6 +17,8 @@ namespace Connect4Game
         private int _dx = 22;
         private int _dy = 470;
 
+        private int miniMaxDepth = 2;
+
         public MainForm()
         {
             InitializeComponent();
@@ -126,34 +128,41 @@ namespace Connect4Game
 
         private void ComputerMove()
         {
-            Table nextTable = Minimax.FindNextTable(_table, out int affectedRow, out int affectedColumn);
+            Minimax.MinimaxAlg(_table, miniMaxDepth, false, int.MaxValue, int.MinValue, out Table t);
+            Table nextTable = t;
 
-            AnimateTransition(_table, nextTable, affectedColumn, affectedRow);
+            AnimateTransition(_table, nextTable);
             _table = nextTable;
             pictureBoxTable.Refresh();
 
-            CheckWinningConditions(affectedColumn, affectedRow);
+            CheckWinningConditions();
 
             _currentPlayer = PlayerType.Human;
             EnableAddTokenButtons();
         }
 
-        private bool CheckWinningConditions(int col, int row)
+        private bool CheckWinningConditions()
         {
-            var humanPoints = _table.GetMaxPoints(PlayerType.Human, col, row);
-            var computerPoints = _table.GetMaxPoints(PlayerType.Computer, col, row);
+            for (int i = 0; i < _table.Columns; i++)
+            {
+                for (int j = 0; j < _table.Rows; j++)
+                {
+                    var humanPoints = _table.GetMaxPoints(PlayerType.Human, i, j);
+                    var computerPoints = _table.GetMaxPoints(PlayerType.Computer, i, j);
 
-            if (computerPoints >= 4)
-            {
-                MessageBox.Show("A castigat inteligenta!");
-                EnableAddTokenButtons(false);
-                return true;
-            }
-            else if (humanPoints >= 4)
-            {
-                MessageBox.Show("A castigat umanitatea!");
-                EnableAddTokenButtons(false);
-                return true;
+                    if (computerPoints >= 4)
+                    {
+                        MessageBox.Show("A castigat inteligenta!");
+                        EnableAddTokenButtons(false);
+                        return true;
+                    }
+                    else if (humanPoints >= 4)
+                    {
+                        MessageBox.Show("A castigat umanitatea!");
+                        EnableAddTokenButtons(false);
+                        return true;
+                    }
+                }
             }
 
             return false;
@@ -165,17 +174,22 @@ namespace Connect4Game
                 return;
 
             Table oldTable = new Table(_table);
-
-            int y = _table.FirstFreePosition(x);
-            if (y == -1)
+            int y;
+            try
+            {
+                Table newTable = oldTable.MakeMove(x, out y, PlayerType.Human);
+                _table = newTable;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Invalid move!");
                 return;
+            }
 
-            _table.Cells[x, y].PlayerType = PlayerType.Human;
-
-            AnimateTransition(oldTable, _table, x, y);
+            AnimateTransition(oldTable, _table);
             pictureBoxTable.Refresh();
 
-            if(CheckWinningConditions(x, y))
+            if(CheckWinningConditions())
             {
                 return;
             }
@@ -185,7 +199,7 @@ namespace Connect4Game
             ComputerMove();
         }
 
-        private void AnimateTransition(Table oldTable, Table newTable, int column, int row)
+        private void AnimateTransition(Table oldTable, Table newTable)
         {
             Bitmap table = new Bitmap(_tableImg);
             Bitmap final = new Bitmap(_tableImg.Width, _tableImg.Height);
@@ -193,29 +207,39 @@ namespace Connect4Game
 
             int animationSteps = 50;
 
-            for (int a = 1; a < animationSteps; a++)
-            {
-                g.DrawImage(table, 0, 0);
+            RedrawTable(g, newTable);
+            Graphics pbg = pictureBoxTable.CreateGraphics();
+            pbg.DrawImage(final, 0, 0);
 
-                RedrawTable(g, oldTable);
-
-                double avy = (a * row + (animationSteps - a) * newTable.Rows) / (double)animationSteps;
-
-                SolidBrush brush = _transparentRed;
-                if (newTable.Cells[column, row].PlayerType == PlayerType.Human)
-                    brush = _transparentGreen;
-
-                g.FillEllipse(brush, (_dx + column * 90), (int)(_dy - avy * 90), _cellDiameter, _cellDiameter);
-
-                if(a == animationSteps - 1)
-                {
-                    g.DrawImage(table, 0, 0);
-                    RedrawTable(g, newTable);
-                }
-
-                Graphics pbg = pictureBoxTable.CreateGraphics();
-                pbg.DrawImage(final, 0, 0);
-            }
+            //for (int i = 0; i < _table.Columns; i++)
+            //{
+            //    for (int j = 0; j < _table.Rows; j++)
+            //    {
+            //        for (int a = 1; a < animationSteps; a++)
+            //        {
+            //            g.DrawImage(table, 0, 0);
+            //
+            //            RedrawTable(g, oldTable);
+            //
+            //            double avy = (a * j + (animationSteps - a) * newTable.Rows) / (double)animationSteps;
+            //
+            //            SolidBrush brush = _transparentRed;
+            //            if (newTable.Cells[i, j].PlayerType == PlayerType.Human)
+            //                brush = _transparentGreen;
+            //
+            //            g.FillEllipse(brush, (_dx + i * 90), (int)(_dy - avy * 90), _cellDiameter, _cellDiameter);
+            //
+            //            if(a == animationSteps - 1)
+            //            {
+            //                g.DrawImage(table, 0, 0);
+            //                RedrawTable(g, newTable);
+            //            }
+            //
+            //            Graphics pbg = pictureBoxTable.CreateGraphics();
+            //            pbg.DrawImage(final, 0, 0);
+            //        }
+            //    }
+            //}
         }
 
         private void RedrawTable(Graphics g, Table table)
