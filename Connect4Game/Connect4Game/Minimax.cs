@@ -100,11 +100,24 @@ namespace Connect4Game
 				int bestVal = int.MaxValue;
 
 				List<Table> possibleTables = GeneratePosibleTables(table, isMaximizing);
+                List<Table> bestTables = new List<Table>();
 
-				foreach (Table currentTable in possibleTables)
+                foreach (Table currentTable in possibleTables)
 				{
 					int value = MinimaxAlg(currentTable, depth - 1, true, alpha, beta, out var t);
-					bestVal = Math.Min(bestVal, value);
+
+                    // verifica daca gasim o mutare mai buna sau la fel de buna
+                    if (value < bestVal)
+                    {
+                        bestTables.Clear();
+                        bestVal = value;
+                        bestTables.Add(currentTable);
+                    }
+                    else if (value == bestVal)
+                    {
+                        bestTables.Add(currentTable);
+                    }
+
 					beta = Math.Min(beta, bestVal);
 					if (beta <= alpha)
 					{
@@ -112,7 +125,7 @@ namespace Connect4Game
 					}
 				}
 
-                bestTable = null;
+                bestTable = GetRandomTable(bestTables);
                 return bestVal;
 			}
 		}
