@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Connect4Game
 {
@@ -40,9 +41,9 @@ namespace Connect4Game
             }
         }
 
-		public Table MakeMove(int x, out int y, PlayerType player)
+		public Table MakeMove(int x, PlayerType player)
 		{
-			y = FirstFreePosition(x);
+			int y = FirstFreePosition(x);
 			if (y == -1)
 			{
 				return null;
@@ -54,7 +55,7 @@ namespace Connect4Game
 			return newTable;
 		}
 
-
+        // TODO: use LINQ expressions
 		private int FirstFreePosition(int x)
         {
             for (int i = 0; i < Rows; i++)
@@ -65,7 +66,7 @@ namespace Connect4Game
                     return i;
                 }
             }
-
+            
             return -1;
         }
 
@@ -219,6 +220,25 @@ namespace Connect4Game
             }
 
             return maxPoints;
+        }
+
+        public void FindDifferences(Table newTable, out int x, out int y)
+        {
+            for (int i = 0; i < Columns; i++)
+            {
+                for (int j = 0; j < Rows; j++)
+                {
+                    if (Cells[i, j].PlayerType == PlayerType.Empty &&
+                        newTable.Cells[i, j].PlayerType != PlayerType.Empty)
+                    {
+                        x = i;
+                        y = j;
+                        return;
+                    }
+                }
+            }
+            x = -1;
+            y = -1;
         }
 
         public void InitializeDummyData()

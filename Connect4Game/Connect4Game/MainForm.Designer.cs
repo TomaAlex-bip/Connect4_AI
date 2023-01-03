@@ -42,9 +42,8 @@
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.minMaxSearchDepthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripComboBoxSearchDepth = new System.Windows.Forms.ToolStripComboBox();
+            this.simulateGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTable)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -145,6 +144,7 @@
             // 
             this.gameToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.startNewGameToolStripMenuItem,
+            this.simulateGameToolStripMenuItem,
             this.quitToolStripMenuItem});
             this.gameToolStripMenuItem.Name = "gameToolStripMenuItem";
             this.gameToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
@@ -175,30 +175,30 @@
             // minMaxSearchDepthToolStripMenuItem
             // 
             this.minMaxSearchDepthToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem2,
-            this.toolStripMenuItem3,
-            this.toolStripMenuItem4});
+            this.toolStripComboBoxSearchDepth});
             this.minMaxSearchDepthToolStripMenuItem.Name = "minMaxSearchDepthToolStripMenuItem";
             this.minMaxSearchDepthToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.minMaxSearchDepthToolStripMenuItem.Text = "MinMax Search Depth";
             // 
-            // toolStripMenuItem2
+            // toolStripComboBoxSearchDepth
             // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem2.Text = "1";
+            this.toolStripComboBoxSearchDepth.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6"});
+            this.toolStripComboBoxSearchDepth.Name = "toolStripComboBoxSearchDepth";
+            this.toolStripComboBoxSearchDepth.Size = new System.Drawing.Size(121, 23);
+            this.toolStripComboBoxSearchDepth.Text = "1";
             // 
-            // toolStripMenuItem3
+            // simulateGameToolStripMenuItem
             // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem3.Text = "2";
-            // 
-            // toolStripMenuItem4
-            // 
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem4.Text = "3";
+            this.simulateGameToolStripMenuItem.Name = "simulateGameToolStripMenuItem";
+            this.simulateGameToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.simulateGameToolStripMenuItem.Text = "Simulate Game";
+            this.simulateGameToolStripMenuItem.Click += new System.EventHandler(this.simulateGameToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -240,9 +240,8 @@
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem minMaxSearchDepthToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
+        private System.Windows.Forms.ToolStripComboBox toolStripComboBoxSearchDepth;
+        private System.Windows.Forms.ToolStripMenuItem simulateGameToolStripMenuItem;
     }
 }
 

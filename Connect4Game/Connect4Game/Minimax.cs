@@ -27,17 +27,17 @@ namespace Connect4Game
 			return aiAdvantage - playerAdvantage;
 		}
 
-		private static List<Table> GeneratePosibleTables(Table table, bool isMaximizingPlayer)
+		private static List<Table> GeneratePosibleTables(Table table, bool isMaximizing)
 		{
 			List<Table> possibleTables = new List<Table>();
-			int y;
 
-			PlayerType player = isMaximizingPlayer ? PlayerType.Human : PlayerType.Computer;
+			PlayerType player = isMaximizing ? PlayerType.Computer : PlayerType.Human;
 
-			for (int i = 0; i < 7; i++)
+			for (int i = 0; i < table.Columns; i++)
 			{
-				var nextTable = table.MakeMove(i, out y, player);
-				if (nextTable != null) { 
+				var nextTable = table.MakeMove(i, player);
+				if (nextTable != null) 
+				{ 
 					possibleTables.Add(nextTable);
 				}
 			}
@@ -45,8 +45,15 @@ namespace Connect4Game
 			return possibleTables;
 		}
 
+		private static Table GetRandomTable(List<Table> tables)
+		{
+			var rand = new Random();
+
+			return tables[rand.Next(0, tables.Count)];
+		}
+
 		//Algoritmul minimax
-		public static int MinimaxAlg(Table table, int depth, bool isMaximizingPlayer, int alpha, int beta, out Table bestTable)
+		public static int MinimaxAlg(Table table, int depth, bool isMaximizing, int alpha, int beta, out Table bestTable)
         {
 			if (depth == 0)
 			{
@@ -54,33 +61,45 @@ namespace Connect4Game
 				return EvaluationFunction(table);
 			}
 
-			if (isMaximizingPlayer)
+			if (isMaximizing)
 			{
 				int bestVal = int.MinValue;
 
-				List<Table> possibleTables = GeneratePosibleTables(table, isMaximizingPlayer);
+				List<Table> possibleTables = GeneratePosibleTables(table, isMaximizing);
+				List<Table> bestTables = new List<Table>();
 
 				foreach (Table currentTable in possibleTables)
 				{
 					int value = MinimaxAlg(currentTable, depth - 1, false, alpha, beta, out var t);
 
-					bestVal = Math.Max(bestVal, value);
+                    // verifica daca gasim o mutare mai buna sau la fel de buna
+                    if (value > bestVal)
+					{
+						bestTables.Clear();
+						bestVal = value;
+						bestTables.Add(currentTable);
+					}
+					else if (value == bestVal)
+					{
+						bestTables.Add(currentTable);
+					}
 
 					alpha = Math.Max(alpha, bestVal);
-					if (beta <= alpha)
+					if (beta < alpha) // doar daca gasim o varianta mai proasta nu o luam in considerare
 					{
 						break;
 					}
 				}
 
-				bestTable = null;
-				return bestVal;
+				// alege random una din cele mai bune mutari
+                bestTable = GetRandomTable(bestTables);
+                return bestVal;
 			}
 			else
 			{
 				int bestVal = int.MaxValue;
 
-				List<Table> possibleTables = GeneratePosibleTables(table, isMaximizingPlayer);
+				List<Table> possibleTables = GeneratePosibleTables(table, isMaximizing);
 
 				foreach (Table currentTable in possibleTables)
 				{
@@ -91,13 +110,11 @@ namespace Connect4Game
 					{
 						break;
 					}
-
-
 				}
-				bestTable = possibleTables.OrderByDescending(tableLam => EvaluationFunction(tableLam)).First();
-				return bestVal;
+
+                bestTable = null;
+                return bestVal;
 			}
 		}
-
 	}
 }

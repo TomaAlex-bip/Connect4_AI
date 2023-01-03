@@ -17,7 +17,7 @@ namespace Connect4Game
         private int _dx = 22;
         private int _dy = 470;
 
-        private int miniMaxDepth = 2;
+        private int _miniMaxDepth = 2;
 
         public MainForm()
         {
@@ -33,17 +33,6 @@ namespace Connect4Game
             _table = new Table();
 
             EnableAddTokenButtons(false);
-        }
-
-        private void EnableAddTokenButtons(bool status = true)
-        {
-            buttonTableColumn0.Enabled = status;
-            buttonTableColumn1.Enabled = status;
-            buttonTableColumn2.Enabled = status;
-            buttonTableColumn3.Enabled = status;
-            buttonTableColumn4.Enabled = status;
-            buttonTableColumn5.Enabled = status;
-            buttonTableColumn6.Enabled = status;
         }
 
         private void pictureBoxTable_Paint(object sender, PaintEventArgs e)
@@ -116,9 +105,28 @@ namespace Connect4Game
 
         private void startNewGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            _miniMaxDepth = toolStripComboBoxSearchDepth.SelectedIndex + 1;
+            if(_miniMaxDepth <= 0)
+            {
+                _miniMaxDepth = 1;
+            }
+
             _table = new Table();
             _currentPlayer = PlayerType.Computer;
             ComputerMove();
+        }
+
+        private void simulateGameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _miniMaxDepth = toolStripComboBoxSearchDepth.SelectedIndex + 1;
+            if (_miniMaxDepth <= 0)
+            {
+                _miniMaxDepth = 1;
+            }
+
+            _table = new Table();
+            _currentPlayer = PlayerType.Computer;
+            SimulatorMove();
         }
 
         private void quitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -128,7 +136,7 @@ namespace Connect4Game
 
         private void ComputerMove()
         {
-            Minimax.MinimaxAlg(_table, miniMaxDepth, false, int.MaxValue, int.MinValue, out Table t);
+            Minimax.MinimaxAlg(_table, _miniMaxDepth, true, int.MinValue, int.MaxValue, out Table t);
             Table nextTable = t;
 
             AnimateTransition(_table, nextTable);
@@ -139,6 +147,34 @@ namespace Connect4Game
 
             _currentPlayer = PlayerType.Human;
             EnableAddTokenButtons();
+        }
+
+        // TODO: fix
+        private void SimulatorMove()
+        {
+            bool isMax = true;
+            if(_currentPlayer == PlayerType.Human)
+                isMax = false;
+
+            Minimax.MinimaxAlg(_table, _miniMaxDepth, isMax, int.MinValue, int.MaxValue, out Table t);
+            Table nextTable = t;
+
+            AnimateTransition(_table, nextTable);
+            _table = nextTable;
+            pictureBoxTable.Refresh();
+
+            if (!CheckWinningConditions())
+            {
+                _currentPlayer = SwitchPlayer(_currentPlayer);
+                SimulatorMove();
+            }
+        }
+
+        private PlayerType SwitchPlayer(PlayerType player)
+        {
+            if (player == PlayerType.Computer)
+                return PlayerType.Human;
+            return PlayerType.Computer;
         }
 
         private bool CheckWinningConditions()
@@ -152,13 +188,13 @@ namespace Connect4Game
 
                     if (computerPoints >= 4)
                     {
-                        MessageBox.Show("A castigat inteligenta!");
+                        MessageBox.Show("A castigat inteligenta! (rosu)");
                         EnableAddTokenButtons(false);
                         return true;
                     }
                     else if (humanPoints >= 4)
                     {
-                        MessageBox.Show("A castigat umanitatea!");
+                        MessageBox.Show("A castigat umanitatea! (verde)");
                         EnableAddTokenButtons(false);
                         return true;
                     }
@@ -174,13 +210,13 @@ namespace Connect4Game
                 return;
 
             Table oldTable = new Table(_table);
-            int y;
-            try
+            
+            Table newTable = oldTable.MakeMove(x, PlayerType.Human);
+            if(newTable != null)
             {
-                Table newTable = oldTable.MakeMove(x, out y, PlayerType.Human);
                 _table = newTable;
             }
-            catch (Exception)
+            else
             {
                 MessageBox.Show("Invalid move!");
                 return;
@@ -207,39 +243,41 @@ namespace Connect4Game
 
             int animationSteps = 50;
 
-            RedrawTable(g, newTable);
-            Graphics pbg = pictureBoxTable.CreateGraphics();
-            pbg.DrawImage(final, 0, 0);
+            oldTable.FindDifferences(newTable, out int x, out int y);
+            
+            if(x == -1 || y == -1)
+            {
+                g.DrawImage(table, 0, 0);
 
-            //for (int i = 0; i < _table.Columns; i++)
-            //{
-            //    for (int j = 0; j < _table.Rows; j++)
-            //    {
-            //        for (int a = 1; a < animationSteps; a++)
-            //        {
-            //            g.DrawImage(table, 0, 0);
-            //
-            //            RedrawTable(g, oldTable);
-            //
-            //            double avy = (a * j + (animationSteps - a) * newTable.Rows) / (double)animationSteps;
-            //
-            //            SolidBrush brush = _transparentRed;
-            //            if (newTable.Cells[i, j].PlayerType == PlayerType.Human)
-            //                brush = _transparentGreen;
-            //
-            //            g.FillEllipse(brush, (_dx + i * 90), (int)(_dy - avy * 90), _cellDiameter, _cellDiameter);
-            //
-            //            if(a == animationSteps - 1)
-            //            {
-            //                g.DrawImage(table, 0, 0);
-            //                RedrawTable(g, newTable);
-            //            }
-            //
-            //            Graphics pbg = pictureBoxTable.CreateGraphics();
-            //            pbg.DrawImage(final, 0, 0);
-            //        }
-            //    }
-            //}
+                RedrawTable(g, oldTable);
+
+                return;
+            }
+
+            for (int a = 1; a < animationSteps; a++)
+            {
+                g.DrawImage(table, 0, 0);
+            
+                RedrawTable(g, oldTable);
+            
+                double avy = (a * y + (animationSteps - a) * newTable.Rows) / (double)animationSteps;
+            
+                SolidBrush brush = _transparentRed;
+                if (newTable.Cells[x, y].PlayerType == PlayerType.Human)
+                    brush = _transparentGreen;
+            
+                g.FillEllipse(brush, (_dx + x * 90), (int)(_dy - avy * 90), _cellDiameter, _cellDiameter);
+            
+                if(a == animationSteps - 1)
+                {
+                    g.DrawImage(table, 0, 0);
+                    RedrawTable(g, newTable);
+                }
+            
+                Graphics pbg = pictureBoxTable.CreateGraphics();
+                pbg.DrawImage(final, 0, 0);
+            }
+            
         }
 
         private void RedrawTable(Graphics g, Table table)
@@ -265,6 +303,17 @@ namespace Connect4Game
                     g.FillEllipse(brush, _dx + x * 90, _dy - y * 90, _cellDiameter, _cellDiameter);
                 }
             }
+        }
+
+        private void EnableAddTokenButtons(bool status = true)
+        {
+            buttonTableColumn0.Enabled = status;
+            buttonTableColumn1.Enabled = status;
+            buttonTableColumn2.Enabled = status;
+            buttonTableColumn3.Enabled = status;
+            buttonTableColumn4.Enabled = status;
+            buttonTableColumn5.Enabled = status;
+            buttonTableColumn6.Enabled = status;
         }
 
         
