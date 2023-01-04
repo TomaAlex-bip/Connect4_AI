@@ -256,5 +256,80 @@ namespace Connect4Game
             Cells[5, 0].PlayerType = PlayerType.Computer;
             Cells[6, 0].PlayerType = PlayerType.Computer;
         }
-    }
+
+		internal int GetAdvantage( PlayerType type)
+		{
+			int count = 0;
+            // Count horizontally
+            for (int row = 0; row < Rows; row++)
+            {
+                for (int col = 0; col < Columns - 3; col++)
+                {
+                    if (isCell(col, row, type) &&
+						isCell(col + 1, row, type) &&
+						isCell(col + 2, row, type) &&
+						isCell(col + 3, row, type)
+                        )
+                    {
+                        count++;
+                    }
+                }
+            }
+
+            // Count vertically
+            for (int row = 0; row < Rows - 3; row++)
+            {
+                for (int col = 0; col < Columns; col++)
+                {
+                    if (isCell(col, row, type) &&
+						isCell(col, row + 1, type) &&
+						isCell(col, row + 2, type) &&
+						isCell(col, row + 3, type)
+                        )
+                    {
+                        count++;
+                    }
+                }
+            }
+
+			// First diagonal
+			for (int row = 0; row < Rows - 3; row++)
+			{
+				for (int col = 0; col < Columns - 3; col++)
+				{
+					if (isCell(col, row, type) &&
+						isCell(col + 1, row + 1, type) &&
+						isCell(col + 2, row + 2, type) &&
+						isCell(col + 3, row + 3, type)
+						)
+					{
+						count++;
+					}
+				}
+			}
+
+			// Second diagonal
+			for (int row = 0; row < Rows - 3; row++)
+			{
+				for (int col = Columns - 1; col > 2; col--)
+				{
+					if (isCell(col, row, type) &&
+						isCell(col - 1, row + 1, type) &&
+						isCell(col - 2, row + 2, type) &&
+						isCell(col - 3, row + 3, type)
+						)
+					{
+						count++;
+					}
+				}
+			}
+
+            return count;
+		}
+
+        bool isCell(int col, int row, PlayerType type )
+        {
+            return Cells[col, row].PlayerType == type;
+		}
+	}
 }

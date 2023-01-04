@@ -27,6 +27,18 @@ namespace Connect4Game
 			return aiAdvantage - playerAdvantage;
 		}
 
+		private static int EvaluationFunction2(Table table)
+		{
+			int playerAdvantage = 0;
+			int aiAdvantage = 0;
+
+			playerAdvantage = table.GetAdvantage( PlayerType.Human);
+			aiAdvantage = table.GetAdvantage( PlayerType.Computer);
+
+			return aiAdvantage - playerAdvantage;
+		}
+
+
 		private static List<Table> GeneratePosibleTables(Table table, bool isMaximizing)
 		{
 			List<Table> possibleTables = new List<Table>();
@@ -49,16 +61,23 @@ namespace Connect4Game
 		{
 			var rand = new Random();
 
-			return tables[rand.Next(0, tables.Count)];
+			if (tables.Count > 0)
+			{
+				return tables[rand.Next(0, tables.Count)];
+			}
+
+			return null;
 		}
+		static int wa = 0;
 
 		//Algoritmul minimax
 		public static int MinimaxAlg(Table table, int depth, bool isMaximizing, int alpha, int beta, out Table bestTable)
         {
+			wa++;
 			if (depth == 0)
 			{
 				bestTable = null;
-				return EvaluationFunction(table);
+				return EvaluationFunction2(table);
 			}
 
 			if (isMaximizing)
@@ -93,6 +112,12 @@ namespace Connect4Game
 
 				// alege random una din cele mai bune mutari
                 bestTable = GetRandomTable(bestTables);
+
+				if( bestTable == null)
+				{
+					return EvaluationFunction2(table);
+				}
+
                 return bestVal;
 			}
 			else
@@ -126,7 +151,11 @@ namespace Connect4Game
 				}
 
                 bestTable = GetRandomTable(bestTables);
-                return bestVal;
+				if (bestTable == null)
+				{
+					return EvaluationFunction2(table);
+				}
+				return bestVal;
 			}
 		}
 	}

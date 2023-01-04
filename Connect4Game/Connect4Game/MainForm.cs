@@ -17,7 +17,7 @@ namespace Connect4Game
         private int _dx = 22;
         private int _dy = 470;
 
-        private int _miniMaxDepth = 2;
+        private int _miniMaxDepth = 4;
 
         public MainForm()
         {
@@ -106,7 +106,7 @@ namespace Connect4Game
         private void startNewGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _miniMaxDepth = toolStripComboBoxSearchDepth.SelectedIndex + 1;
-            if(_miniMaxDepth <= 0)
+            if(_miniMaxDepth <= 0 )
             {
                 _miniMaxDepth = 1;
             }
