@@ -136,7 +136,7 @@ namespace Connect4Game
 
         private void ComputerMove()
         {
-            Minimax.MinimaxAlg(_table, _miniMaxDepth, true, int.MinValue, int.MaxValue, out Table t);
+            Minimax.MinimaxAlg(_table, _miniMaxDepth, true, int.MinValue, int.MaxValue, out Table t, Minimax.EvaluationFunction2);
             Table nextTable = t;
 
             AnimateTransition(_table, nextTable);
@@ -149,14 +149,18 @@ namespace Connect4Game
             EnableAddTokenButtons();
         }
 
-        // TODO: fix
         private void SimulatorMove()
         {
             bool isMax = true;
-            if(_currentPlayer == PlayerType.Human)
-                isMax = false;
+            Func<Table, int> evalFunc = Minimax.EvaluationFunction2;
 
-            Minimax.MinimaxAlg(_table, _miniMaxDepth, isMax, int.MinValue, int.MaxValue, out Table t);
+            if(_currentPlayer == PlayerType.Human)
+            {
+                isMax = false;
+                evalFunc = Minimax.EvaluationFunction;
+            }
+
+            Minimax.MinimaxAlg(_table, _miniMaxDepth, isMax, int.MinValue, int.MaxValue, out Table t, evalFunc);
             Table nextTable = t;
 
             AnimateTransition(_table, nextTable);
@@ -316,6 +320,15 @@ namespace Connect4Game
             buttonTableColumn6.Enabled = status;
         }
 
-        
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            const string copyright =
+                "Connect4 utilizand algoritmul minimax\r\n" +
+                "Proiect Inteligenta artificiala\r\n" +
+                "(c)2022-2023 Apetrei Gabriel Bogdan si Toma Alexandru Ionut\r\n\r\n" +
+                "https://github.com/TomaAlex-bip/Connect4_AI";
+
+            MessageBox.Show(copyright, "Despre jocul Connect4");
+        }
     }
 }

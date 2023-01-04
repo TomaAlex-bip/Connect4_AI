@@ -7,7 +7,7 @@ namespace Connect4Game
     internal class Minimax
     {
         //Fuctie de evalare in stil minimax( min - castila player, max -castiga AI-ul)
-		private static int EvaluationFunction(Table table)
+		public static int EvaluationFunction(Table table)
 		{
 			int playerAdvantage = 0;
 			int aiAdvantage = 0;
@@ -27,7 +27,7 @@ namespace Connect4Game
 			return aiAdvantage - playerAdvantage;
 		}
 
-		private static int EvaluationFunction2(Table table)
+		public static int EvaluationFunction2(Table table)
 		{
 			int playerAdvantage = 0;
 			int aiAdvantage = 0;
@@ -71,13 +71,13 @@ namespace Connect4Game
 		static int wa = 0;
 
 		//Algoritmul minimax
-		public static int MinimaxAlg(Table table, int depth, bool isMaximizing, int alpha, int beta, out Table bestTable)
+		public static int MinimaxAlg(Table table, int depth, bool isMaximizing, int alpha, int beta, out Table bestTable, Func<Table, int> evalutionFunction)
         {
 			wa++;
 			if (depth == 0)
 			{
 				bestTable = null;
-				return EvaluationFunction2(table);
+				return evalutionFunction(table);
 			}
 
 			if (isMaximizing)
@@ -89,7 +89,7 @@ namespace Connect4Game
 
 				foreach (Table currentTable in possibleTables)
 				{
-					int value = MinimaxAlg(currentTable, depth - 1, false, alpha, beta, out var t);
+					int value = MinimaxAlg(currentTable, depth - 1, false, alpha, beta, out var t, evalutionFunction);
 
                     // verifica daca gasim o mutare mai buna sau la fel de buna
                     if (value > bestVal)
@@ -115,7 +115,7 @@ namespace Connect4Game
 
 				if( bestTable == null)
 				{
-					return EvaluationFunction2(table);
+					return evalutionFunction(table);
 				}
 
                 return bestVal;
@@ -129,7 +129,7 @@ namespace Connect4Game
 
                 foreach (Table currentTable in possibleTables)
 				{
-					int value = MinimaxAlg(currentTable, depth - 1, true, alpha, beta, out var t);
+					int value = MinimaxAlg(currentTable, depth - 1, true, alpha, beta, out var t, evalutionFunction);
 
                     // verifica daca gasim o mutare mai buna sau la fel de buna
                     if (value < bestVal)
@@ -153,7 +153,7 @@ namespace Connect4Game
                 bestTable = GetRandomTable(bestTables);
 				if (bestTable == null)
 				{
-					return EvaluationFunction2(table);
+					return evalutionFunction(table);
 				}
 				return bestVal;
 			}
