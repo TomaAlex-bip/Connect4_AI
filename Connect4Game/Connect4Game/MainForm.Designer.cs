@@ -36,6 +36,7 @@
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.minMaxSearchDepthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripComboBoxSearchDepth = new System.Windows.Forms.ToolStripComboBox();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonTableColumn6 = new System.Windows.Forms.Button();
             this.buttonTableColumn5 = new System.Windows.Forms.Button();
             this.buttonTableColumn4 = new System.Windows.Forms.Button();
@@ -44,7 +45,6 @@
             this.buttonTableColumn1 = new System.Windows.Forms.Button();
             this.buttonTableColumn0 = new System.Windows.Forms.Button();
             this.pictureBoxTable = new System.Windows.Forms.PictureBox();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTable)).BeginInit();
             this.SuspendLayout();
@@ -122,6 +122,13 @@
             this.toolStripComboBoxSearchDepth.Name = "toolStripComboBoxSearchDepth";
             this.toolStripComboBoxSearchDepth.Size = new System.Drawing.Size(121, 23);
             this.toolStripComboBoxSearchDepth.Text = "4";
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 22);
+            this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // buttonTableColumn6
             // 
@@ -211,13 +218,6 @@
             this.pictureBoxTable.TabStop = false;
             this.pictureBoxTable.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBoxTable_Paint);
             // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 22);
-            this.aboutToolStripMenuItem.Text = "About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -233,7 +233,7 @@
             this.Controls.Add(this.pictureBoxTable);
             this.Controls.Add(this.menuStrip1);
             this.Name = "MainForm";
-            this.Text = "Form1";
+            this.Text = "Connect4 - Simulator";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxTable)).EndInit();
