@@ -160,7 +160,7 @@ namespace Connect4Game
                 evalFunc = Minimax.EvaluationFunction;
             }
 
-            Minimax.MinimaxAlg(_table, _miniMaxDepth, isMax, int.MinValue, int.MaxValue, out Table t, evalFunc);
+            Minimax.MinimaxAlg(_table, _miniMaxDepth, isMax, int.MinValue, int.MaxValue, out Table t, Minimax.EvaluationFunction2);
             Table nextTable = t;
 
             AnimateTransition(_table, nextTable);
