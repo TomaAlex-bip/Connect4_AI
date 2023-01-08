@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Diagnostics;
+using System.Collections.Generic;
+using System.Collections;
+using System.IO;
 
 namespace Connect4Game
 {
@@ -19,7 +23,10 @@ namespace Connect4Game
 
         private int _miniMaxDepth = 4;
 
-        public MainForm()
+		Stopwatch sw = new Stopwatch();
+        List<TimeSpan> timings = new List<TimeSpan>();
+
+		public MainForm()
         {
             InitializeComponent();
 
@@ -127,7 +134,16 @@ namespace Connect4Game
             _table = new Table();
             _currentPlayer = PlayerType.Computer;
             SimulatorMove();
-        }
+
+			//Writing timings to a file
+			TextWriter tw = new StreamWriter("MinimaxTimings.txt");
+
+			foreach (var s in timings)
+				tw.WriteLine(s.TotalSeconds.ToString());
+
+            tw.Close();
+
+		}
 
         private void quitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -149,7 +165,8 @@ namespace Connect4Game
             EnableAddTokenButtons();
         }
 
-        private void SimulatorMove()
+
+		private void SimulatorMove()
         {
             bool isMax = true;
             Func<Table, int> evalFunc = Minimax.EvaluationFunction2;
@@ -160,8 +177,14 @@ namespace Connect4Game
                 evalFunc = Minimax.EvaluationFunction;
             }
 
-            Minimax.MinimaxAlg(_table, _miniMaxDepth, isMax, int.MinValue, int.MaxValue, out Table t, evalFunc);
-            Table nextTable = t;
+			sw.Start();
+			Minimax.MinimaxAlg(_table, _miniMaxDepth, isMax, int.MinValue, int.MaxValue, out Table t, evalFunc);
+			sw.Stop();
+
+            timings.Add(sw.Elapsed);
+            sw.Restart();
+
+			Table nextTable = t;
 
             AnimateTransition(_table, nextTable);
             _table = nextTable;
