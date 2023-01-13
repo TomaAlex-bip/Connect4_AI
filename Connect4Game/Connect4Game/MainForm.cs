@@ -18,6 +18,7 @@ namespace Connect4Game
         private int _dy = 470;
 
         private int _miniMaxDepth = 4;
+        private Func<Table, int> _evaluationFunction = Minimax.EvaluationFunction;
 
         public MainForm()
         {
@@ -111,6 +112,16 @@ namespace Connect4Game
                 _miniMaxDepth = 1;
             }
 
+            var evalFuncIndex = toolStripComboBoxEvalFunction.SelectedIndex;
+            if(evalFuncIndex == 1)
+            {
+                _evaluationFunction = Minimax.EvaluationFunction;
+            }
+            else
+            {
+                _evaluationFunction = Minimax.EvaluationFunction2;
+            }
+
             _table = new Table();
             _currentPlayer = PlayerType.Computer;
             ComputerMove();
@@ -136,7 +147,7 @@ namespace Connect4Game
 
         private void ComputerMove()
         {
-            Minimax.MinimaxAlg(_table, _miniMaxDepth, true, int.MinValue, int.MaxValue, out Table t, Minimax.EvaluationFunction2);
+            Minimax.MinimaxAlg(_table, _miniMaxDepth, true, int.MinValue, int.MaxValue, out Table t, _evaluationFunction);
             Table nextTable = t;
 
             AnimateTransition(_table, nextTable);
