@@ -183,12 +183,12 @@ namespace Connect4Game
         {
             bool isMax = true;
             //Verde joaca cu ev2 si rosu cu ev1
-            Func<Table, int> evalFunc = Minimax.EvaluationFunction;  //Rosu
+            Func<Table, int> evalFunc = Minimax.EvaluationFunction2;  //Rosu
 
             if(_currentPlayer == PlayerType.Human)  //Verde
             {
                 isMax = false;
-               evalFunc = Minimax.EvaluationFunction2;
+               evalFunc = _evaluationFunction;
             }
 			sw.Restart();
 			sw.Start();
