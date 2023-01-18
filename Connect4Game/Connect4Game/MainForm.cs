@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Collections;
 using System.IO;
+using static System.Net.WebRequestMethods;
 
 namespace Connect4Game
 {
@@ -135,9 +136,10 @@ namespace Connect4Game
             _currentPlayer = PlayerType.Computer;
             SimulatorMove();
 
-			//Writing timings to a file
-			TextWriter tw = new StreamWriter("MinimaxTimings.txt");
+            //Writing timings to a file
+			TextWriter tw = System.IO.File.AppendText("MinimaxTimings.txt");
 
+			tw.WriteLine("___NEW RUN___");
 			foreach (var s in timings)
 				tw.WriteLine(s.TotalSeconds.ToString());
 
@@ -169,20 +171,20 @@ namespace Connect4Game
 		private void SimulatorMove()
         {
             bool isMax = true;
-            Func<Table, int> evalFunc = Minimax.EvaluationFunction2;
+            //Verde joaca cu ev2 si rosu cu ev1
+            Func<Table, int> evalFunc = Minimax.EvaluationFunction;  //Rosu
 
-            if(_currentPlayer == PlayerType.Human)
+            if(_currentPlayer == PlayerType.Human)  //Verde
             {
                 isMax = false;
-                evalFunc = Minimax.EvaluationFunction;
+               evalFunc = Minimax.EvaluationFunction2;
             }
-
+			sw.Restart();
 			sw.Start();
 			Minimax.MinimaxAlg(_table, _miniMaxDepth, isMax, int.MinValue, int.MaxValue, out Table t, evalFunc);
 			sw.Stop();
 
             timings.Add(sw.Elapsed);
-            sw.Restart();
 
 			Table nextTable = t;
 

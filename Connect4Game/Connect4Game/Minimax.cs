@@ -16,19 +16,25 @@ namespace Connect4Game
 			{
 				for (int j = 0; j < table.Rows; j++)
 				{
-					var player = table.GetMaxPoints(PlayerType.Human, i, j);
+					//Fuctia GetMaxPoints determina marimea setului cel mai mare
+					//de jetoanele propii pe orizontala, verticala si orizontala relativ
+					//la o pozitie i,j
+					var player = table.GetMaxPoints(PlayerType.Human, i, j); 
 					var ai = table.GetMaxPoints(PlayerType.Computer, i, j);
 
 					playerAdvantage = Math.Max(player, playerAdvantage);
 					aiAdvantage = Math.Max(ai, aiAdvantage);
 				}
 			}
-
 			return aiAdvantage - playerAdvantage;
 		}
 
 		public static int EvaluationFunction2(Table table)
 		{
+			//Fuctia GetAdvantage numara grupurile de cate 4 jetoane de pe fiecare tabla
+			//de pe orizontala, verticala si diagonala
+			//O grupare de 5 jetoane se numara ca find 2 grupari separate de 4
+			//In acest fel speram sa capturam "cat de oportuna" e o tabla
 			int playerAdvantage = table.GetAdvantage( PlayerType.Human);
 			int aiAdvantage = table.GetAdvantage( PlayerType.Computer);
 
@@ -147,8 +153,9 @@ namespace Connect4Game
 				{
 					return evalutionFunction(table);
 				}
+				if (bestVal == int.MaxValue) throw new Exception("Error");
 
-                return bestVal;
+				return bestVal;
 			}
 			else
 			{
@@ -185,6 +192,8 @@ namespace Connect4Game
 				{
 					return evalutionFunction(table);
 				}
+				if (bestVal == int.MaxValue) throw new Exception("Error");
+
 				return bestVal;
 			}
 		}
