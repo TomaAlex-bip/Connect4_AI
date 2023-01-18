@@ -36,6 +36,8 @@
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.minMaxSearchDepthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripComboBoxSearchDepth = new System.Windows.Forms.ToolStripComboBox();
+            this.evaluationFunctionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripComboBoxEvalFunction = new System.Windows.Forms.ToolStripComboBox();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonTableColumn6 = new System.Windows.Forms.Button();
             this.buttonTableColumn5 = new System.Windows.Forms.Button();
@@ -97,7 +99,8 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.minMaxSearchDepthToolStripMenuItem});
+            this.minMaxSearchDepthToolStripMenuItem,
+            this.evaluationFunctionToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
@@ -122,6 +125,23 @@
             this.toolStripComboBoxSearchDepth.Name = "toolStripComboBoxSearchDepth";
             this.toolStripComboBoxSearchDepth.Size = new System.Drawing.Size(121, 23);
             this.toolStripComboBoxSearchDepth.Text = "4";
+            // 
+            // evaluationFunctionToolStripMenuItem
+            // 
+            this.evaluationFunctionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripComboBoxEvalFunction});
+            this.evaluationFunctionToolStripMenuItem.Name = "evaluationFunctionToolStripMenuItem";
+            this.evaluationFunctionToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.evaluationFunctionToolStripMenuItem.Text = "Evaluation Function";
+            // 
+            // toolStripComboBoxEvalFunction
+            // 
+            this.toolStripComboBoxEvalFunction.Items.AddRange(new object[] {
+            "1",
+            "2"});
+            this.toolStripComboBoxEvalFunction.Name = "toolStripComboBoxEvalFunction";
+            this.toolStripComboBoxEvalFunction.Size = new System.Drawing.Size(121, 23);
+            this.toolStripComboBoxEvalFunction.Text = "2";
             // 
             // aboutToolStripMenuItem
             // 
@@ -261,6 +281,8 @@
         private System.Windows.Forms.ToolStripComboBox toolStripComboBoxSearchDepth;
         private System.Windows.Forms.ToolStripMenuItem simulateGameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem evaluationFunctionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripComboBox toolStripComboBoxEvalFunction;
     }
 }
 
